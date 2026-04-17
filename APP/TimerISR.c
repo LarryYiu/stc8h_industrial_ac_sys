@@ -1,13 +1,15 @@
+#include "BussinessConfig.h"
 #include "STC8G_H_Timer.h"
+#include "TouchKey.h"
 
 u32 xdata time0IntNum = 0;
 
 void Timer0_ISR_Handler(void) interrupt TMR0_VECTOR
 {
     time0IntNum++;
-    if (time0IntNum % 20 == 0)
+    if (time0IntNum % TIMER0_INTERVAL_MS == 0)
     {
-        TSCTRL = (1 << 7) + (1 << 6) + 1;
+        TouchKey_Scan();
     }
 }
 
