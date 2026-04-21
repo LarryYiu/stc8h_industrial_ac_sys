@@ -421,11 +421,6 @@
               <FileType>1</FileType>
               <FilePath>.\LIB\I2C.c</FilePath>
             </File>
-            <File>
-              <FileName>TouchKey.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\DRIVER\TouchKey.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -465,6 +460,18 @@
         </Group>
         <Group>
           <GroupName>DRIVER</GroupName>
+          <Files>
+            <File>
+              <FileName>TouchKey.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DRIVER\TouchKey.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCD_Seg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DRIVER\LCD_Seg.c</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

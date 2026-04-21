@@ -31,4 +31,6 @@ The project is organized into several directories, each serving a specific purpo
 
 - `User Interface (LCD)`: This module manages the user interface, including displaying information on an LCD screen and handling user input through the touch keys.
 
-- `Data storage (EEPROM)`: This module handles data storage using EEPROM, allowing the system to preserve settings and other important data.
+- `Data storage (EEPROM)`: This module handles data storage using EEPROM, allowing the system to preserve settings and other important data. CRC is implemented for data integrity in EEPROM storage.
+
+- `Communication (UART/Modbus RTU)`: This module manages communication with external devices using UART and Modbus RTU protocol, enabling features such as remote monitoring and control. Modbus RTU uses RS485 for long-distance communication, UART(TTL) for debugging and short-distance communication. CRC is implemented for data integrity in Modbus RTU communication.

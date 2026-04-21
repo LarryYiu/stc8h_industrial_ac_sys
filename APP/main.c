@@ -24,6 +24,13 @@ void main()
     EA = 1;
     printf("Config Done \r\n");
 
+    // (*(unsigned char volatile xdata*)0xfb92) |= 0x20;
+    // C1SEGV2 |= 0x20;
+    // C2SEGV2 |= 0x20;
+    // C3SEGV2 |= 0x20;
+    // C3SEGV0 |= 0x08;
+    // C1SEGV0 |= 0x08;
+    LCD_ALL();
     while (1)
     {
         // if (time0IntNum - printCnter >= 1000)  // print every 1s

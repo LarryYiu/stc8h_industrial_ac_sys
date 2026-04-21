@@ -6,5 +6,6 @@ void App_Init()
     UART_Config_Common();
     Timer_Config_t0_1ms();
     TouchKey_Config();
+    LCD_Config();
     // other peripheral configurations can be added here
 }
