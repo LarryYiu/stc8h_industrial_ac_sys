@@ -396,6 +396,16 @@
               <FileType>1</FileType>
               <FilePath>.\APP\TimerISR.c</FilePath>
             </File>
+            <File>
+              <FileName>HSM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\HSM.c</FilePath>
+            </File>
+            <File>
+              <FileName>KeyEventHandler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\KeyEventHandler.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -470,6 +480,11 @@
               <FileName>LCD_Seg.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\DRIVER\LCD_Seg.c</FilePath>
+            </File>
+            <File>
+              <FileName>AHT21.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DRIVER\AHT21.c</FilePath>
             </File>
           </Files>
         </Group>

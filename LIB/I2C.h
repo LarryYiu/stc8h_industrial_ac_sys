@@ -1,7 +1,11 @@
 #ifndef __I2C_H__
 #define __I2C_H__
 
+#include <stc8h.h>
+
 #include "Config.h"
+#include "GPIO.h"
+#include "STC8G_H_GPIO.h"
 #include "STC8G_H_I2C.h"
 #include "STC8G_H_NVIC.h"
 #include "STC8G_H_Switch.h"
@@ -29,5 +33,15 @@
  */
 bit I2C_Config(u8 i2cPins, bit isMaster, bit isEnabled, bit isAutoSendEnabled,
                u8 i2cSpeed, int8 priority);
+
+void I2C_Config_Common();
+
+void I2C_Start();
+void I2C_Stop();
+void I2C_SendBus(u8 dat);
+u8 I2C_RecvBus();
+void I2C_RecvACK();
+void I2C_SendACK();
+void I2C_SendNACK();
 
 #endif  // __I2C_H__

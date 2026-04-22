@@ -476,7 +476,7 @@ void LCD_SetFanLevel(int8 level)
     }
 }
 
-void LCD_SETBacklight(bit on) { P60 = on; }
+void LCD_SetBacklight(bit on) { P60 = on; }
 
 void LCD_ALL()
 {
@@ -499,7 +499,7 @@ void LCD_ALL()
     LCD_SetSettingTemp(TRUE, 888, TRUE);
     LCD_SetSettingSign(TRUE);
     LCD_SetFanLevel(5);
-    LCD_SETBacklight(HIGH);
+    LCD_SetBacklight(HIGH);
 }
 
 void LCD_Clear()
@@ -523,5 +523,5 @@ void LCD_Clear()
     LCD_SetSettingTemp(FALSE, 0, FALSE);
     LCD_SetSettingSign(FALSE);
     LCD_SetFanLevel(-1);
-    LCD_SETBacklight(FALSE);
+    LCD_SetBacklight(FALSE);
 }

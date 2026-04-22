@@ -44,6 +44,10 @@
 #define TK_CONTINUOUS_PRESS_THRESHOLD 3
 #endif  // TK_CONTINUOUS_PRESS_THRESHOLD
 
+#ifndef TK_CLEAR_DURATION_DELAY
+#define TK_CLEAR_DURATION_DELAY 1
+#endif  // TK_CLEAR_DURATION_DELAY
+
 #ifndef TK_ALLOW_ZERO_FOLLOWING
 #define TK_ALLOW_ZERO_FOLLOWING TRUE
 #endif  // TK_ALLOW_ZERO_FOLLOWING
@@ -185,7 +189,8 @@ bit TouchKey_IsPressed(u8 channel);
 
 /**
  * @brief TouchKey_Event registers callback functions for short press and long
- * press events for a specific touch key channel.
+ * press events for a specific touch key channel. add continuous press event if
+ * needed.
  *
  * @param keyIndex The touch key channel number (0-15) to register the events
  * for.
@@ -199,7 +204,8 @@ bit TouchKey_IsPressed(u8 channel);
  * callback function should take a single parameter of type u8, which can be
  * pressCount or key index.
  */
-void TouchKey_Event(u8 keyIndex, void (*onShortPress)(u8 pressCount),
+void TouchKey_Event(u8 keyIndex, bit isReleaseTrigger,
+                    void (*onShortPress)(u8 pressCount),
                     void (*onLongPress)(u8 pressCount));
 
 #endif  // __TOUCH_KEY_H__

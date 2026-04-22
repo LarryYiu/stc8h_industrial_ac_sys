@@ -41,6 +41,6 @@ void LCD_Set485Sign(bit on);
 void LCD_SetSettingTemp(bit enable, float temperature, bit showSign);
 void LCD_SetSettingSign(bit on);
 void LCD_SetFanLevel(int8 level);
-void LCD_SETBacklight(bit on);
+void LCD_SetBacklight(bit on);
 
 #endif  // __LCD_SEG_H__

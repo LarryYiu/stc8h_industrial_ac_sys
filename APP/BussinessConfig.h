@@ -29,4 +29,13 @@
 #define TK_DEBUG TRUE
 // End of Touch Key configuration
 
+// AHT21 configuration
+#define AHT21_USE_CRC FALSE
+// End of AHT21 configuration
+
+// STATE MACHINE configuration
+#define FSM_DEBUG TRUE
+#define BACKLIGHT_CD 2
+// End of STATE MACHINE configuration
+
 #endif  // __BUSSINESS_CONFIG_H__

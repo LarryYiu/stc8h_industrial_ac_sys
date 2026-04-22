@@ -139,8 +139,11 @@ void TouchKey_ISR() interrupt TKSU_VECTOR
                 {
                     touchKeys[tkIndex].pressCount = 0;
                 }
-
-                touchKeys[tkIndex].pressDuration = 0;
+                if (touchKeys[tkIndex].lastReleaseDuration >=
+                    TK_CLEAR_DURATION_DELAY)
+                {
+                    touchKeys[tkIndex].pressDuration = 0;
+                }
                 touchKeys[tkIndex].lastReleaseDuration++;
                 touchKeys[tkIndex].isPressing = FALSE;
             }
@@ -190,7 +193,11 @@ void TouchKey_ISR() interrupt TKSU_VECTOR
                 touchKeys[tkIndex].pressCount = 0;
             }
 
-            touchKeys[tkIndex].pressDuration = 0;
+            if (touchKeys[tkIndex].lastReleaseDuration >=
+                TK_CLEAR_DURATION_DELAY)
+            {
+                touchKeys[tkIndex].pressDuration = 0;
+            }
             touchKeys[tkIndex].lastReleaseDuration++;
             touchKeys[tkIndex].isPressing = FALSE;
         }
@@ -317,30 +324,61 @@ u16 TouchKey_GetInitVal(u8 channel)
     }
 }
 
-void TouchKey_Event(u8 keyIndex, void (*onShortPress)(u8 pressCount),
+void TouchKey_Event(u8 keyIndex, bit isReleaseTrigger,
+                    void (*onShortPress)(u8 pressCount),
                     void (*onLongPress)(u8 pressCount))
 {
+    static u16 lastPressed;
+
     if (keyIndex < TK_MAX_CHANNEL && keyIndex >= 0 &&
         touchKeys[keyIndex].isPressing)
     {
-        if (touchKeys[keyIndex].pressDuration >= TK_LONG_PRESS_THRESHOLD)
+        if ((lastPressed >> keyIndex & 0x0001) == 0)
         {
-            if (onLongPress)
+            lastPressed |= (0x0001 << keyIndex);
+        }
+        if (!isReleaseTrigger)
+        {
+            if (touchKeys[keyIndex].pressDuration >= TK_LONG_PRESS_THRESHOLD)
             {
-                onLongPress(keyIndex);
+                if (onLongPress)
+                {
+                    onLongPress(keyIndex);
+                }
+            }
+            else
+            {
+                if (onShortPress)
+                {
+                    onShortPress(keyIndex);
+                }
             }
         }
-        else
-        {
-            if (onShortPress)
-            {
-                onShortPress(keyIndex);
-            }
-        }
-        // add continuous press event if needed
     }
     else
     {
+        if (isReleaseTrigger)
+        {
+            if ((lastPressed >> keyIndex & 0x0001) != 0)
+            {
+                if (touchKeys[keyIndex].pressDuration >=
+                    TK_LONG_PRESS_THRESHOLD)
+                {
+                    if (onLongPress)
+                    {
+                        onLongPress(keyIndex);
+                    }
+                }
+                else
+                {
+                    if (onShortPress)
+                    {
+                        onShortPress(keyIndex);
+                    }
+                }
+            }
+        }
+        lastPressed &= ~(0x0001 << keyIndex);
         return;
     }
 }

@@ -3,11 +3,14 @@
 
 #include <stc8h.h>
 
+#include "AHT21.h"
 #include "Config.h"
 #include "GPIO.h"
+#include "I2C.h"
 #include "LCD_Seg.h"
 #include "STC8G_H_Delay.h"
 #include "STC8G_H_GPIO.h"
+#include "STC8G_H_I2C.h"
 #include "STC8G_H_NVIC.h"
 #include "STC8G_H_Switch.h"
 #include "STC8G_H_Timer.h"
