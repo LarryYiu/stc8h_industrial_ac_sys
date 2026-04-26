@@ -445,7 +445,7 @@ void LCD_SetSettingSign(bit on)
 }
 void LCD_SetFanLevel(int8 level)
 {
-    if (level > 5 || level < 0)
+    if (level > 5 || level <= 0)
     {
         __LCD_SET_SEG(__S12_ADDR__, __S12_BIT__, LOW);
         __LCD_SET_SEG(__S1_ADDR__, __S1_BIT__, LOW);

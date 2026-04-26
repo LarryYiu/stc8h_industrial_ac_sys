@@ -208,4 +208,8 @@ void TouchKey_Event(u8 keyIndex, bit isReleaseTrigger,
                     void (*onShortPress)(u8 pressCount),
                     void (*onLongPress)(u8 pressCount));
 
+void TouchKey_Event_ListenerAIO(bit isReleaseTrigger,
+                                void (*onShortPress)(u8 pressCount),
+                                void (*onLongPress)(u8 pressCount));
+
 #endif  // __TOUCH_KEY_H__

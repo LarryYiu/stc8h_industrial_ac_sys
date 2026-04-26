@@ -16,9 +16,25 @@ void main()
         if (TK_Ready)
         {
             TK_Ready = FALSE;
-            TouchKey_Event(TK_IDX_POWER, TRUE, onShortPress, onLongPress);
+            TouchKey_Event_ListenerAIO(TRUE, onShortPress, onLongPress);
         }
-        HSM_Run(evt);
+        HSM_Dispatch(evt);
         evt = EVT_DEFAULT;
+
+        // if (COM4.RX_TimeOut > 0)
+        // {
+        //     if (--COM4.RX_TimeOut == 0)
+        //     {
+        //         if (COM4.RX_Cnt > 0)
+        //         {
+        //             u8 i;
+        //             for (i = 0; i < COM4.RX_Cnt; i++)
+        //             {
+        //                 TX4_write2buff(RX4_Buffer[i]);
+        //             }
+        //             COM4.RX_Cnt = 0;
+        //         }
+        //     }
+        // }
     }
 }

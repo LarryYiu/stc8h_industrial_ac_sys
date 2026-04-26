@@ -382,3 +382,70 @@ void TouchKey_Event(u8 keyIndex, bit isReleaseTrigger,
         return;
     }
 }
+
+void TouchKey_Event_ListenerAIO(bit isReleaseTrigger,
+                                void (*onShortPress)(u8 pressCount),
+                                void (*onLongPress)(u8 pressCount))
+{
+    static u16 lastPressed;
+    u8 keyIndex;
+    for (keyIndex = 0; keyIndex < TK_MAX_CHANNEL; keyIndex++)
+    {
+        if (!((TK_CHANNEL_ENABLED >> keyIndex) & 0x0001))
+        {
+            continue;
+        }
+        if (keyIndex < TK_MAX_CHANNEL && keyIndex >= 0 &&
+            touchKeys[keyIndex].isPressing)
+        {
+            if ((lastPressed >> keyIndex & 0x0001) == 0)
+            {
+                lastPressed |= (0x0001 << keyIndex);
+            }
+            if (!isReleaseTrigger)
+            {
+                if (touchKeys[keyIndex].pressDuration >=
+                    TK_LONG_PRESS_THRESHOLD)
+                {
+                    if (onLongPress)
+                    {
+                        onLongPress(keyIndex);
+                    }
+                }
+                else
+                {
+                    if (onShortPress)
+                    {
+                        onShortPress(keyIndex);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (isReleaseTrigger)
+            {
+                if ((lastPressed >> keyIndex & 0x0001) != 0)
+                {
+                    if (touchKeys[keyIndex].pressDuration >=
+                        TK_LONG_PRESS_THRESHOLD)
+                    {
+                        if (onLongPress)
+                        {
+                            onLongPress(keyIndex);
+                        }
+                    }
+                    else
+                    {
+                        if (onShortPress)
+                        {
+                            onShortPress(keyIndex);
+                        }
+                    }
+                }
+            }
+            lastPressed &= ~(0x0001 << keyIndex);
+            return;
+        }
+    }
+}

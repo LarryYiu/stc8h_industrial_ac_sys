@@ -7,7 +7,7 @@ void onShortPress(u8 index)
     if (index == TK_IDX_POWER)
     {
         printf("onRelease\r\n");
-        evt = EVT_BTN;
+        evt = EVT_BTN_POWER;
     }
 }
 
