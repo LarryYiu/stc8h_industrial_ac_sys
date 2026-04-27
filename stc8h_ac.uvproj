@@ -406,6 +406,11 @@
               <FileType>1</FileType>
               <FilePath>.\APP\KeyEventHandler.c</FilePath>
             </File>
+            <File>
+              <FileName>SysCtl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\SysCtl.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -485,6 +490,11 @@
               <FileName>AHT21.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\DRIVER\AHT21.c</FilePath>
+            </File>
+            <File>
+              <FileName>IAP_Data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\DRIVER\IAP_Data.c</FilePath>
             </File>
           </Files>
         </Group>

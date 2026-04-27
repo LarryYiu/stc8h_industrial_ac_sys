@@ -17,20 +17,18 @@ struct HSM
 };
 
 bit State_Top(Event_t evt);
-bit State_On(Event_t evt);
 bit State_Off(Event_t evt);
 
 bit State_OnAuto(Event_t evt);
 bit State_OnManual(Event_t evt);
 
 State_t code TOP = {State_Top, NULL};
-State_t code ON = {State_On, &TOP};
 State_t code OFF = {State_Off, &TOP};
 
-State_t code MANUAL = {State_OnManual, &ON};
-State_t code AUTO = {State_OnAuto, &ON};
+State_t code MANUAL = {State_OnManual, &TOP};
+State_t code AUTO = {State_OnAuto, &TOP};
 
-HSM_t hsm = {&ON};
+HSM_t hsm = {&OFF};
 void HSM_Dispatch(Event_t evt)
 {
     State_t* s = hsm.Current;
@@ -61,23 +59,6 @@ bit State_Top(Event_t evt)
     return 0;
 }
 
-bit State_On(Event_t evt)
-{
-    if (evt > EVT_DEFAULT)
-    {
-        SYS_ResetBackLightCD();
-    }
-    switch (evt)
-    {
-        case EVT_DEFAULT:
-            return 0;
-        case EVT_BTN_POWER:
-            hsm.Current = &OFF;
-            return 1;
-    }
-    return 0;
-}
-
 bit State_Off(Event_t evt)
 {
     if (evt > EVT_DEFAULT)
@@ -89,14 +70,21 @@ bit State_Off(Event_t evt)
         case EVT_DEFAULT:
             return 0;
         case EVT_BTN_POWER:
-            hsm.Current = &ON;
+        {
+            hsm.Current = SYS_GetFanMode() ? &MANUAL : &AUTO;
+            SYS_StartFilterTimer();
             return 1;
+        }
     }
     return 0;
 }
 
 bit State_OnAuto(Event_t evt)
 {
+    // TODO: implement auto mode logic
+    LCD_SetManualSign(FALSE);
+    LCD_SetAutoSign(TRUE);
+    SYS_UpdateFanSpeed();
     if (evt > EVT_DEFAULT)
     {
         SYS_ResetBackLightCD();
@@ -107,6 +95,8 @@ bit State_OnAuto(Event_t evt)
             return 0;
         case EVT_BTN_POWER:
             hsm.Current = &OFF;
+            SYS_StopFilterTimer();
+            SYS_FanDisplayOff();
             return 1;
         case EVT_BTN_MODE:
             hsm.Current = &MANUAL;
@@ -121,12 +111,17 @@ bit State_OnManual(Event_t evt)
     {
         SYS_ResetBackLightCD();
     }
+    LCD_SetManualSign(TRUE);
+    LCD_SetAutoSign(FALSE);
+    SYS_UpdateFanSpeed();
     switch (evt)
     {
         case EVT_DEFAULT:
             return 0;
         case EVT_BTN_POWER:
             hsm.Current = &OFF;
+            SYS_StopFilterTimer();
+            SYS_FanDisplayOff();
             return 1;
         case EVT_BTN_MODE:
             hsm.Current = &AUTO;

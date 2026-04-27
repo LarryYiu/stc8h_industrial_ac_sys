@@ -322,7 +322,7 @@ u8 code __LCD_DT_ADDR_LOOKUP[8][7][2] = {
      {__8G_ADDR__, __8G_BIT__}},
 };
 
-void LCD_SetDT(u8 tubeIndex, u8 num)
+void __LCD_SetDigitalTube(u8 tubeIndex, u8 num)
 {
     if (tubeIndex < 1 || tubeIndex > 8)
         return;
@@ -339,13 +339,13 @@ void LCD_SetDT(u8 tubeIndex, u8 num)
     }
 }
 
-void LCD_SetHour(bit enable, u8 hour)
+void LCD_DisplayHour(char hour)
 {
-    if (!enable)
+    if (hour < 0 || hour > 12)
     {
         __LCD_SET_SEG(__R1_ADDR__, __R1_BIT__, LOW);
         __LCD_SET_SEG(__OBC_ADDR__, __OBC_BIT__, LOW);
-        LCD_SetDT(1, 10);
+        __LCD_SetDigitalTube(1, 10);
         return;
     }
     else
@@ -353,11 +353,11 @@ void LCD_SetHour(bit enable, u8 hour)
         __LCD_SET_SEG(__R1_ADDR__, __R1_BIT__, HIGH);
         __LCD_SET_SEG(__OBC_ADDR__, __OBC_BIT__,
                       ((hour / 10) > 0) ? HIGH : LOW);
-        LCD_SetDT(1, hour % 10);
+        __LCD_SetDigitalTube(1, hour % 10);
     }
 }
 
-void LCD_Set_T_Sign(bit on) { __LCD_SET_SEG(__R2_ADDR__, __R2_BIT__, on); }
+void LCD_SetTestSign(bit on) { __LCD_SET_SEG(__R2_ADDR__, __R2_BIT__, on); }
 
 void LCD_SetLockSign(bit on) { __LCD_SET_SEG(__R3_ADDR__, __R3_BIT__, on); }
 
@@ -370,9 +370,9 @@ void LCD_SetHouseLeafSign(bit on)
     __LCD_SET_SEG(__R6_ADDR__, __R6_BIT__, on);
 }
 
-void LCD_Set_A_Sign(bit on) { __LCD_SET_SEG(__R7_ADDR__, __R7_BIT__, on); }
+void LCD_SetAutoSign(bit on) { __LCD_SET_SEG(__R7_ADDR__, __R7_BIT__, on); }
 
-void LCD_Set_M_Sign(bit on) { __LCD_SET_SEG(__R8_ADDR__, __R8_BIT__, on); }
+void LCD_SetManualSign(bit on) { __LCD_SET_SEG(__R8_ADDR__, __R8_BIT__, on); }
 
 void LCD_SetHouseWindSign(bit on)
 {
@@ -382,68 +382,78 @@ void LCD_SetHouseWindSign(bit on)
 void LCD_SetSunSign(bit on) { __LCD_SET_SEG(__R10_ADDR__, __R10_BIT__, on); }
 void LCD_SetSnowSign(bit on) { __LCD_SET_SEG(__R11_ADDR__, __R11_BIT__, on); }
 void LCD_SetSignalSign(bit on) { __LCD_SET_SEG(__R12_ADDR__, __R12_BIT__, on); }
-void LCD_SetHumidity(bit enable, float humidity, bit showSign)
-{
-    __LCD_SET_SEG(__R13_ADDR__, __R13_BIT__, showSign);
-    if (!enable)
-    {
-        __LCD_SET_SEG(__R13_ADDR__, __R13_BIT__, LOW);
-        LCD_SetDT(4, 10);
-        LCD_SetDT(5, 10);
-        return;
-    }
-    else
-    {
-        u8 humInt = (u8)humidity;
-        LCD_SetDT(4, humInt / 10);
-        LCD_SetDT(5, humInt % 10);
-    }
-}
-void LCD_SetTemperature(bit enable, float temperature, bit showSign)
-{
-    __LCD_SET_SEG(__R14_ADDR__, __R14_BIT__, showSign);
-    if (!enable)
-    {
-        __LCD_SET_SEG(__R14_ADDR__, __R14_BIT__, LOW);
-        LCD_SetDT(2, 10);
-        LCD_SetDT(3, 10);
-        return;
-    }
-    else
-    {
-        u8 tempInt = (u8)temperature;
-        LCD_SetDT(2, tempInt / 10);
-        LCD_SetDT(3, tempInt % 10);
-    }
-}
-void LCD_Set_PM25_Sign(bit on) { __LCD_SET_SEG(__R16_ADDR__, __R16_BIT__, on); }
-void LCD_Set485Sign(bit on) { __LCD_SET_SEG(__R17_ADDR__, __R17_BIT__, on); }
-
-void LCD_SetSettingTemp(bit enable, float temperature, bit showSign)
-{
-    __LCD_SET_SEG(__R15_ADDR__, __R15_BIT__, showSign);
-    if (!enable)
-    {
-        __LCD_SET_SEG(__R15_ADDR__, __R15_BIT__, LOW);
-        LCD_SetDT(6, 10);
-        LCD_SetDT(7, 10);
-        LCD_SetDT(8, 10);
-        return;
-    }
-    else
-    {
-        u16 tempInt = (u16)temperature;
-        LCD_SetDT(6, tempInt / 100);
-        LCD_SetDT(7, (tempInt / 10) % 10);
-        LCD_SetDT(8, tempInt % 10);
-    }
-}
 
 void LCD_SetSettingSign(bit on)
 {
     __LCD_SET_SEG(__R18_ADDR__, __R18_BIT__, on);
 }
-void LCD_SetFanLevel(int8 level)
+
+void LCD_Set485Label(bit on) { __LCD_SET_SEG(__R17_ADDR__, __R17_BIT__, on); }
+
+void LCD_SetTempSettingLabel(bit on)
+{
+    __LCD_SET_SEG(__R15_ADDR__, __R15_BIT__, on);
+}
+
+// Humidity
+
+void LCD_HideHumidity()
+{
+    __LCD_SET_SEG(__R13_ADDR__, __R13_BIT__, LOW);
+    __LCD_SetDigitalTube(4, 10);
+    __LCD_SetDigitalTube(5, 10);
+    return;
+}
+
+void LCD_SetHumidity(float humidity, bit showLabel)
+{
+    u8 humInt = (u8)humidity;
+    __LCD_SET_SEG(__R13_ADDR__, __R13_BIT__, showLabel);
+    __LCD_SetDigitalTube(4, humInt / 10);
+    __LCD_SetDigitalTube(5, humInt % 10);
+}
+
+// Temperature
+
+void LCD_HideTemperature()
+{
+    __LCD_SET_SEG(__R14_ADDR__, __R14_BIT__, LOW);
+    __LCD_SetDigitalTube(2, 10);
+    __LCD_SetDigitalTube(3, 10);
+    return;
+}
+
+void LCD_SetTemperature(float temperature, bit showLabel)
+{
+    u8 tempInt = (u8)temperature;
+    __LCD_SET_SEG(__R14_ADDR__, __R14_BIT__, showLabel);
+
+    __LCD_SetDigitalTube(2, tempInt / 10);
+    __LCD_SetDigitalTube(3, tempInt % 10);
+}
+
+// PM2.5
+
+void LCD_HidePM25()
+{
+    __LCD_SET_SEG(__R16_ADDR__, __R16_BIT__, LOW);
+    __LCD_SetDigitalTube(6, 10);
+    __LCD_SetDigitalTube(7, 10);
+    __LCD_SetDigitalTube(8, 10);
+    return;
+}
+
+void LCD_SetPM25(u8 pm25, bit showLabel)
+{
+    __LCD_SET_SEG(__R16_ADDR__, __R16_BIT__, showLabel);
+    __LCD_SetDigitalTube(6, pm25 / 100);
+    __LCD_SetDigitalTube(7, (pm25 / 10) % 10);
+    __LCD_SetDigitalTube(8, pm25 % 10);
+}
+
+// fan
+
+void LCD_SetFanSpeed(int8 level)
 {
     if (level > 5 || level <= 0)
     {
@@ -480,48 +490,48 @@ void LCD_SetBacklight(bit on) { P60 = on; }
 
 void LCD_ALL()
 {
-    LCD_SetHour(TRUE, 18);
-    LCD_Set_T_Sign(TRUE);
+    LCD_DisplayHour(12);
+    LCD_SetTestSign(TRUE);
     LCD_SetLockSign(TRUE);
     LCD_SetNetSign(TRUE);
     LCD_SetLeafSign(TRUE);
     LCD_SetHouseLeafSign(TRUE);
-    LCD_Set_A_Sign(TRUE);
-    LCD_Set_M_Sign(TRUE);
+    LCD_SetAutoSign(TRUE);
+    LCD_SetManualSign(TRUE);
     LCD_SetHouseWindSign(TRUE);
     LCD_SetSunSign(TRUE);
     LCD_SetSnowSign(TRUE);
     LCD_SetSignalSign(TRUE);
-    LCD_SetHumidity(TRUE, 88, TRUE);
-    LCD_SetTemperature(TRUE, 88, TRUE);
-    LCD_Set_PM25_Sign(TRUE);
-    LCD_Set485Sign(TRUE);
-    LCD_SetSettingTemp(TRUE, 888, TRUE);
+    LCD_SetHumidity(99, TRUE);
+    LCD_SetTemperature(99, TRUE);
+    LCD_SetPM25(999, TRUE);
+    LCD_Set485Label(TRUE);
+    LCD_SetTempSettingLabel(TRUE);
     LCD_SetSettingSign(TRUE);
-    LCD_SetFanLevel(5);
-    LCD_SetBacklight(HIGH);
+    LCD_SetFanSpeed(5);
+    LCD_SetBacklight(TRUE);
 }
 
 void LCD_Clear()
 {
-    LCD_SetHour(FALSE, 0);
-    LCD_Set_T_Sign(FALSE);
+    LCD_DisplayHour(-1);
+    LCD_SetTestSign(FALSE);
     LCD_SetLockSign(FALSE);
     LCD_SetNetSign(FALSE);
     LCD_SetLeafSign(FALSE);
     LCD_SetHouseLeafSign(FALSE);
-    LCD_Set_A_Sign(FALSE);
-    LCD_Set_M_Sign(FALSE);
+    LCD_SetAutoSign(FALSE);
+    LCD_SetManualSign(FALSE);
     LCD_SetHouseWindSign(FALSE);
     LCD_SetSunSign(FALSE);
     LCD_SetSnowSign(FALSE);
     LCD_SetSignalSign(FALSE);
-    LCD_SetHumidity(FALSE, 0, FALSE);
-    LCD_SetTemperature(FALSE, 0, FALSE);
-    LCD_Set_PM25_Sign(FALSE);
-    LCD_Set485Sign(FALSE);
-    LCD_SetSettingTemp(FALSE, 0, FALSE);
+    LCD_HideHumidity();
+    LCD_HideTemperature();
+    LCD_HidePM25();
+    LCD_Set485Label(FALSE);
+    LCD_SetTempSettingLabel(FALSE);
     LCD_SetSettingSign(FALSE);
-    LCD_SetFanLevel(-1);
+    LCD_SetFanSpeed(0);
     LCD_SetBacklight(FALSE);
 }

@@ -5,18 +5,28 @@
 #include "Config.h"
 #include "HSM.h"
 #include "KeyEventHandler.h"
+#include "SysCtl.h"
+// #include "LCD_Seg.h"
 
 void main()
 {
     App_Init();
     EA = 1;
+    SYS_Init();
     printf("Config Done \r\n");
+    // LCD_ALL();
     while (1)
     {
         if (TK_Ready)
         {
             TK_Ready = FALSE;
-            TouchKey_Event_ListenerAIO(TRUE, onShortPress, onLongPress);
+            // TouchKey_Event_ListenerAIO(TRUE, onShortPress, onLongPress);
+
+            TouchKey_Event(TK_IDX_POWER, TRUE, onShortPress, onLongPress);
+            TouchKey_Event(TK_IDX_MANUAL, TRUE, onShortPress, onLongPress);
+            TouchKey_Event(TK_IDX_DOWN, TRUE, onShortPress, onLongPress);
+            TouchKey_Event(TK_IDX_UP, TRUE, onShortPress, onLongPress);
+            TouchKey_Event(TK_IDX_SETTING, TRUE, onShortPress, onLongPress);
         }
         HSM_Dispatch(evt);
         evt = EVT_DEFAULT;
