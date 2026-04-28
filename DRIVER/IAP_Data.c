@@ -9,7 +9,7 @@ void Data_SetFanMode(AirCtlData_t* dat, bit manual)
 }
 void Data_SetFanSpeed(AirCtlData_t* dat, u8 speed)
 {
-    dat->fanDat |= (speed << 1);
+    dat->fanDat = (dat->fanDat & 0x01) | (speed << 1);
 }
 
 /**

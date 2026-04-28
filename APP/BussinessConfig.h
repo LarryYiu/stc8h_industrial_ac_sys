@@ -1,7 +1,7 @@
 #ifndef __BUSSINESS_CONFIG_H__
 #define __BUSSINESS_CONFIG_H__
 
-#define TIMER0_INTERVAL_MS 50
+#define TIMER0_INTERVAL_MS 100
 
 // Touch Key configuration
 #define TK_IDX_POWER 14

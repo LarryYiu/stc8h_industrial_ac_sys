@@ -28,6 +28,7 @@ void main()
             TouchKey_Event(TK_IDX_UP, TRUE, onShortPress, onLongPress);
             TouchKey_Event(TK_IDX_SETTING, TRUE, onShortPress, onLongPress);
         }
+        // printf("evt: %bu\r\n", (u8)evt);
         HSM_Dispatch(evt);
         evt = EVT_DEFAULT;
 
