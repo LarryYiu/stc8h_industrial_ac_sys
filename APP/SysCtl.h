@@ -9,6 +9,14 @@
 #include "LCD_Seg.h"
 #include "STC8G_H_Timer.h"
 
+typedef enum
+{
+    SETTING_FAN_TH = 0,
+    SETTING_INHALE_PWM,
+    SETTING_EXHALE_PWM,
+    SETTING_FILTER_TH,
+} SETTING_CATE;
+
 void SYS_Init();
 
 /**
@@ -17,10 +25,14 @@ void SYS_Init();
  */
 bit SYS_GetFanMode();
 void SYS_SetFanMode(bit manual);
-void SYS_FanDisplayOff();
 
 void SYS_UpdateTempHum();
 void SYS_UpdateFanSpeed();
+
+void SYS_DisplaySetting(SETTING_CATE cat, u8 index);
+
+void SYS_IncreaseSettingValue(SETTING_CATE cat, u8 index);
+void SYS_DecreaseSettingValue(SETTING_CATE cat, u8 index);
 
 void SYS_ResetBackLightCD();
 void SYS_DecreaseBackLightCD();

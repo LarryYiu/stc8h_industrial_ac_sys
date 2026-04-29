@@ -27,6 +27,47 @@ void SYS_UpdateTempHum()
     LCD_SetHumidity(aht21Dat.humidity, TRUE);
 }
 
+void SYS_DisplaySetting(SETTING_CATE cat, u8 index)
+{
+    LCD_SetManualSign(FALSE);
+    LCD_SetAutoSign(FALSE);
+    LCD_SetFanSpeed(0);
+    LCD_SetSettingSign(TRUE);
+    LCD_HideHumidity();
+    LCD_SetTemperature(index + 1, FALSE);
+    if (cat == SETTING_FAN_TH)
+        LCD_SetPM25(dat.autoSpeedPM25Threshold[index], FALSE);
+    else if (cat == SETTING_INHALE_PWM)
+        LCD_SetPM25(dat.autoSpeedInhalePWM[index], FALSE);
+    else if (cat == SETTING_EXHALE_PWM)
+        LCD_SetPM25(dat.autoSpeedExhaustPWM[index], FALSE);
+    else if (cat == SETTING_FILTER_TH)
+        LCD_SetPM25(dat.filterSetTime, FALSE);
+}
+
+void SYS_IncreaseSettingValue(SETTING_CATE cat, u8 index)
+{
+    if (cat == SETTING_FAN_TH)
+        dat.autoSpeedPM25Threshold[index]++;
+    else if (cat == SETTING_INHALE_PWM)
+        dat.autoSpeedInhalePWM[index]++;
+    else if (cat == SETTING_EXHALE_PWM)
+        dat.autoSpeedExhaustPWM[index]++;
+    else if (cat == SETTING_FILTER_TH)
+        dat.filterSetTime++;
+}
+void SYS_DecreaseSettingValue(SETTING_CATE cat, u8 index)
+{
+    if (cat == SETTING_FAN_TH)
+        dat.autoSpeedPM25Threshold[index]--;
+    else if (cat == SETTING_INHALE_PWM)
+        dat.autoSpeedInhalePWM[index]--;
+    else if (cat == SETTING_EXHALE_PWM)
+        dat.autoSpeedExhaustPWM[index]--;
+    else if (cat == SETTING_FILTER_TH)
+        dat.filterSetTime--;
+}
+
 void SYS_UpdateFanSpeed()
 {
     u8 speed = Data_GetFanSpeed(&dat);
@@ -78,5 +119,3 @@ void SYS_DecreaseFanSpeed()
 
 void SYS_StartFilterTimer() { Timer3_Run(ENABLE); }
 void SYS_StopFilterTimer() { Timer3_Run(DISABLE); }
-
-void SYS_FanDisplayOff() { LCD_SetFanSpeed(0); }
